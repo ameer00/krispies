@@ -69,7 +69,8 @@ resource "google_compute_subnetwork" "subnet" {
  
  
 // Variables for GKE
-variable "zone" { default = "us-central1-f" }
+variable "zone1" { default = "us-central1-f" }
+variable "zone2" { default = "us-central1-b" }
 variable "master1_ip_cidr" { default = "172.24.0.0/19" } 
 variable "master2_ip_cidr" { default = "172.25.0.0/19" }
 variable "master3_ip_cidr" { default = "172.26.0.0/19" }
@@ -79,7 +80,7 @@ variable "master4_ip_cidr" { default = "172.27.0.0/19" }
 resource "google_container_cluster" "gke-0" {
   count                   = "${var.count}"
   name                    = "gke-subnet-${count.index}-0"
-  zone                    = "${var.zone}"
+  zone                    = "${var.zone1}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
@@ -96,7 +97,7 @@ resource "google_container_cluster" "gke-0" {
 resource "google_container_cluster" "gke-1" {
   count                   = "${var.count}"
   name                    = "gke-subnet-${count.index}-1"
-  zone                    = "${var.zone}"
+  zone                    = "${var.zone2}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
@@ -113,7 +114,7 @@ resource "google_container_cluster" "gke-1" {
 resource "google_container_cluster" "gke-2" {
   count                   = "${var.count}"
   name                    = "gke-subnet-${count.index}-2"
-  zone                    = "${var.zone}"
+  zone                    = "${var.zone1}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
@@ -130,7 +131,7 @@ resource "google_container_cluster" "gke-2" {
 resource "google_container_cluster" "gke-3" {
   count                   = "${var.count}"
   name                    = "gke-subnet-${count.index}-3"
-  zone                    = "${var.zone}"
+  zone                    = "${var.zone2}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
