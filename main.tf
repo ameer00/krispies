@@ -73,7 +73,7 @@ resource "google_container_cluster" "gke-0" {
   name                    = "gke-${var.count}-1"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
-  subnetwork              = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
+  subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
   master_ipv4_cidr_block  = "${cidrsubnet(var.master1_ip_cidr, 9, count.index)}"
@@ -90,7 +90,7 @@ resource "google_container_cluster" "gke-1" {
   name                    = "gke-${var.count}-2"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
-  subnetwork              = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
+  subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
   master_ipv4_cidr_block  = "${cidrsubnet(var.master2_ip_cidr, 9, count.index)}"
@@ -107,7 +107,7 @@ resource "google_container_cluster" "gke-2" {
   name                    = "gke-${var.count}-3"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
-  subnetwork              = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
+  subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
   master_ipv4_cidr_block  = "${cidrsubnet(var.master3_ip_cidr, 9, count.index)}"
@@ -124,7 +124,7 @@ resource "google_container_cluster" "gke-3" {
   name                    = "gke-${var.count}-4"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
-  subnetwork              = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
+  subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
   master_ipv4_cidr_block  = "${cidrsubnet(var.master4_ip_cidr, 9, count.index)}"
