@@ -20,39 +20,17 @@ resource "google_compute_network" "vpc" {
  auto_create_subnetworks = "false"
 }
 
-//Outputs for VPC
-output "vpc_name" {
-  value = "${google_compute_network.vpc.name}"
-}
-
-
-// Variables for subnet
-// variable "subnet_name" {}
-// variable "network" {}
-//variable "ip_range" {}
-//variable "pod_subnet" {}
-//variable "svc1_subnet" {}
-//variable "svc2_subnet" {}
-//variable "svc3_subnet" {}
-//variable "svc4_subnet" {}
-
-
-
 // Configure subnets
+variable "count" { default = "10" }
 variable "node_ip_cidr" { default = "192.168.0.0/16"}
-
 variable "pod_ip_cidr" { default = "10.0.0.0/8" }
-
 variable "svc1_ip_cidr" { default = "172.16.0.0/15" }
-
 variable "svc2_ip_cidr" { default = "172.18.0.0/15" }
-
 variable "svc3_ip_cidr" { default = "172.20.0.0/15" }
-
 variable "svc4_ip_cidr" { default = "172.22.0.0/15" }
 
 resource "google_compute_subnetwork" "subnet" {
- count              = "3"
+ count              = "${var.count}"
  name               = "subnet-${count.index}"
  project            = "${var.project}"
  ip_cidr_range      = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
@@ -80,11 +58,3 @@ resource "google_compute_subnetwork" "subnet" {
   }
  depends_on = ["google_compute_network.vpc"]
 }
-
-// Outputs for subnets
-//output "ip_range" {
-//  value = "${google_compute_subnetwork.subnet.ip_cidr_range}"
-//}
-//output "self_link" {
-//  value = "${google_compute_subnetwork.subnet.self_link}"
-//}
