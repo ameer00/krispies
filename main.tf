@@ -62,7 +62,7 @@ resource "google_compute_subnetwork" "subnet" {
  
 // Variables for GKE
 variable "zone" { default = "us-central1-f" }
-variable "master1_ip_cidr" { default = "172.24.0.0/19" } 
+variable "master_ip_cidr" { default = "172.24.0.0/19" } 
 variable "master2_ip_cidr" { default = "172.25.0.0/19" }
 variable "master3_ip_cidr" { default = "172.26.0.0/19" }
 variable "master4_ip_cidr" { default = "172.27.0.0/19" }
@@ -76,7 +76,7 @@ resource "google_container_cluster" "gke-0" {
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
-  master_ipv4_cidr_block  = "${cidrsubnet(var.master1_ip_cidr, 9, count.index)}"
+  master_ipv4_cidr_block  = "${cidrsubnet(var.master_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
    cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
    services_secondary_range_name = "svc1-${replace(replace(cidrsubnet(var.svc1_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
@@ -93,7 +93,7 @@ resource "google_container_cluster" "gke-1" {
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
-  master_ipv4_cidr_block  = "${cidrsubnet(var.master2_ip_cidr, 9, count.index)}"
+  master_ipv4_cidr_block  = "${cidrsubnet(var.master_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
    cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
    services_secondary_range_name = "svc2-${replace(replace(cidrsubnet(var.svc2_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
@@ -110,7 +110,7 @@ resource "google_container_cluster" "gke-2" {
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
-  master_ipv4_cidr_block  = "${cidrsubnet(var.master3_ip_cidr, 9, count.index)}"
+  master_ipv4_cidr_block  = "${cidrsubnet(var.master_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
    cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
    services_secondary_range_name = "svc3-${replace(replace(cidrsubnet(var.svc3_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
@@ -127,7 +127,7 @@ resource "google_container_cluster" "gke-3" {
   subnetwork              = "subnet-${count.index}"
   initial_node_count      = 31
   private_cluster         = "true"
-  master_ipv4_cidr_block  = "${cidrsubnet(var.master4_ip_cidr, 9, count.index)}"
+  master_ipv4_cidr_block  = "${cidrsubnet(var.master_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
    cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
    services_secondary_range_name = "svc4-${replace(replace(cidrsubnet(var.svc4_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
