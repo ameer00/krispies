@@ -68,7 +68,7 @@ variable "master3_ip_cidr" { default = "172.26.0.0/19" }
 variable "master4_ip_cidr" { default = "172.27.0.0/19" }
  
 // Create GKE Clusters 1 of 4
-resource "google_container_cluster" "gke" {
+resource "google_container_cluster" "gke-0" {
   count                   = "${var.count}"
   name                    = "gke-${var.count}-1"
   zone                    = "${var.zone}"
@@ -81,11 +81,11 @@ resource "google_container_cluster" "gke" {
    cluster_secondary_range_name  = "${cidrsubnet(var.pod_ip_cidr, 9, count.index)}"
    services_secondary_range_name = "${cidrsubnet(var.svc1_ip_cidr, 9, count.index)}"
    }
-  depends_on = [google_compute_subnetwork.subnet]
+  depends_on = ["google_compute_subnetwork.subnet"]
 }
  
 // Create GKE Clusters 2 of 4
-resource "google_container_cluster" "gke" {
+resource "google_container_cluster" "gke-1" {
   count                   = "${var.count}"
   name                    = "gke-${var.count}-2"
   zone                    = "${var.zone}"
@@ -98,11 +98,11 @@ resource "google_container_cluster" "gke" {
    cluster_secondary_range_name  = "${cidrsubnet(var.pod_ip_cidr, 9, count.index)}"
    services_secondary_range_name = "${cidrsubnet(var.svc2_ip_cidr, 9, count.index)}"
    }
-  depends_on = [google_compute_subnetwork.subnet]
+  depends_on = ["google_compute_subnetwork.subnet"]
 }
  
 // Create GKE Clusters 3 of 4
-resource "google_container_cluster" "gke" {
+resource "google_container_cluster" "gke-2" {
   count                   = "${var.count}"
   name                    = "gke-${var.count}-3"
   zone                    = "${var.zone}"
@@ -115,11 +115,11 @@ resource "google_container_cluster" "gke" {
    cluster_secondary_range_name  = "${cidrsubnet(var.pod_ip_cidr, 9, count.index)}"
    services_secondary_range_name = "${cidrsubnet(var.svc3_ip_cidr, 9, count.index)}"
    }
-  depends_on = [google_compute_subnetwork.subnet]
+  depends_on = ["google_compute_subnetwork.subnet"]
 }
  
 // Create GKE Clusters 4 of 4
-resource "google_container_cluster" "gke" {
+resource "google_container_cluster" "gke-3" {
   count                   = "${var.count}"
   name                    = "gke-${var.count}-4"
   zone                    = "${var.zone}"
@@ -132,5 +132,5 @@ resource "google_container_cluster" "gke" {
    cluster_secondary_range_name  = "${cidrsubnet(var.pod_ip_cidr, 9, count.index)}"
    services_secondary_range_name = "${cidrsubnet(var.svc4_ip_cidr, 9, count.index)}"
    }
-  depends_on = [google_compute_subnetwork.subnet]
+  depends_on = ["google_compute_subnetwork.subnet"]
 }
