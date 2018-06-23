@@ -1,3 +1,5 @@
+variable "count" { default = "3" }
+
 // Variables for project
 variable "region" { default = "us-central1" }
 variable "project" { default = "krispies-crackle" }
@@ -21,7 +23,6 @@ resource "google_compute_network" "vpc" {
 }
 
 // Configure subnets
-variable "count" { default = "3" }
 variable "node_ip_cidr" { default = "192.168.0.0/16"}
 variable "pod_ip_cidr" { default = "10.0.0.0/8" }
 variable "svc1_ip_cidr" { default = "172.16.0.0/15" }
