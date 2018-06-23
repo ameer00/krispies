@@ -1,3 +1,10 @@
+// Count variable determines the number of subnetworks that are created in the VPC
+// With each subnetwork, 5 secondary subnets are created
+// Each count or subnetwork can have 4 GKE clusters so a count = 10 creates 40 GKE clusters
+// Place your credentials.json file (for the service account) in the same folder as the main.tf file
+// Grant service account Project Editor IAM Role
+// A service account called terraform@ is already created
+ 
 variable "count" { default = "3" }
 
 // Variables for project
