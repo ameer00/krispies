@@ -70,7 +70,7 @@ variable "master4_ip_cidr" { default = "172.27.0.0/19" }
 // Create GKE Clusters 1 of 4
 resource "google_container_cluster" "gke-0" {
   count                   = "${var.count}"
-  name                    = "gke1-${var.count}"
+  name                    = "gke1-${count.index}"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
@@ -87,7 +87,7 @@ resource "google_container_cluster" "gke-0" {
 // Create GKE Clusters 2 of 4
 resource "google_container_cluster" "gke-1" {
   count                   = "${var.count}"
-  name                    = "gke2-${var.count}"
+  name                    = "gke2-${count.index}"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
@@ -104,7 +104,7 @@ resource "google_container_cluster" "gke-1" {
 // Create GKE Clusters 3 of 4
 resource "google_container_cluster" "gke-2" {
   count                   = "${var.count}"
-  name                    = "gke3-${var.count}"
+  name                    = "gke3-${count.index}"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
@@ -121,7 +121,7 @@ resource "google_container_cluster" "gke-2" {
 // Create GKE Clusters 4 of 4
 resource "google_container_cluster" "gke-3" {
   count                   = "${var.count}"
-  name                    = "gke4-${var.count}"
+  name                    = "gke4-${count.index}"
   zone                    = "${var.zone}"
   network                 = "${var.vpc}"
   subnetwork              = "subnet-${count.index}"
