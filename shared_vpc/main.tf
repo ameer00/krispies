@@ -6,6 +6,7 @@ variable "credentials" { default = "~/.config/gcloud/terraform-admin.json" }
 // variable "project_name" { default = "theplatform-tf" }
 variable "billing_account" { default = "00CF06-C4A4BE-92FDD8" }
 variable "org_id" { default = "689680127547" }
+variable "zone1" { default = "us-central1-a" }
 variable "region" { default = "us-central1" }
 variable "vpc" { default = "snap" }
 
@@ -39,7 +40,7 @@ resource "google_compute_network" "vpc" {
 
 // Configure subnets
 variable "node_ip_cidr" { default = "192.168.0.0/16"}
-variable "pod_ip_cidr" { default = "10.0.0.0/8" }
+variable "pod_ip_cidr"  { default = "10.0.0.0/8" }
 variable "svc1_ip_cidr" { default = "172.16.0.0/15" }
 variable "svc2_ip_cidr" { default = "172.18.0.0/15" }
 variable "svc3_ip_cidr" { default = "172.20.0.0/15" }
@@ -89,10 +90,21 @@ resource "google_project_service" "host" {
  service = "compute.googleapis.com"
 }
 
+resource "google_project_service" "host-container" {
+ project = "${google_project.host.project_id}"
+ service = "container.googleapis.com"
+}
+
 resource "google_project_service" "project" {
  count   = "${var.project_count}"
  project = "${element(google_project.project.*.project_id, count.index)}"
  service = "compute.googleapis.com"
+}
+
+resource "google_project_service" "project-container" {
+ count   = "${var.project_count}"
+ project = "${element(google_project.project.*.project_id, count.index)}"
+ service = "container.googleapis.com"
 }
 
 // Enable shared VPC hosting in the host project.
@@ -136,11 +148,34 @@ resource "google_compute_subnetwork_iam_member" "service_network_cloud_services"
 // IAM for service project's default service account service-<proj_num>@container-engine-robot.iam.gserviceaccount.com 
 // use subnets.  repeat for multiple service projects and replace the .0.number field
 resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
-	count 	      = "${var.subnet_count}"
+	count		  = "${var.subnet_count}"
 	project       = "${google_compute_shared_vpc_host_project.host.project}"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
 	member        = "serviceAccount:service-${google_project.project.0.number}@container-engine-robot.iam.gserviceaccount.com"
+}
+
+// Create Cluster
+resource "google_container_cluster" "shared_vpc_cluster" {
+	count			   = 1
+	name               = "cluster-${count.index}"
+	zone               = "${var.zone1}"
+	initial_node_count = 3
+	project            = "${element(google_compute_shared_vpc_service_project.service_projects.*.service_project, count.index)}"
+	network    = "${google_compute_network.vpc.self_link}"
+	subnetwork = "${element(google_compute_subnetwork.subnet.*.self_link, count.index)}"
+	ip_allocation_policy {
+        cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
+        services_secondary_range_name = "svc1-${replace(replace(cidrsubnet(var.svc1_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
+	}
+	depends_on = [
+		"google_project_iam_member.host_service_agent",
+		"google_compute_subnetwork_iam_member.service_network_cloud_services",
+		"google_compute_subnetwork_iam_member.service_network_gke_user",
+		"google_compute_subnetwork.subnet",
+		"google_project_service.project-container",
+		"google_project_service.host-container",
+	]
 }
 
 
@@ -156,7 +191,7 @@ output "project_id" {
 output "svc_project_numbers" {
 	value = ["${google_project.project.*.number}"]
 }
-	
+
 output "shared_vpc_svc_projects" {
 	value = ["${google_compute_shared_vpc_service_project.service_projects.*.service_project}"]
 }
