@@ -114,6 +114,14 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
   ]
 }
 
+// Assign Kubernetes host Service Agent role to the terraform service account in the Host project
+resource "google_project_iam_member" "host_service_agent" {
+	project = "${google_project_service.host_project.project}"
+	role    = "roles/container.hostServiceAgentUser"
+	member  = "serviceAccount:service-${google_project.service_project.number}@container-engine-robot.iam.gserviceaccount.com"
+	depends_on = ["google_project_service.service_project"]
+}
+
 // Bunch of outputs
 output "host_project_id" {
 	value = "${google_project.host.project_id}"
