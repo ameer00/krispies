@@ -11,10 +11,10 @@ variable "region" { default = "us-central1" }
 variable "vpc" { default = "snap" }
 
 provider "google" {
- version 	 = "~> 1.15"
+ version     = "~> 1.15"
  credentials = "${file("${var.credentials}")}"
  project     = "${var.project}"
- region 	 = "${var.region}"
+ region      = "${var.region}"
 }
 
 resource "random_id" "pid" {
@@ -33,9 +33,9 @@ resource "google_project" "host" {
 // Configure VPC in host project
 resource "google_compute_network" "vpc" {
  name                    = "${var.vpc}"
- project				 = "${google_project.host.project_id}"
+ project		 = "${google_project.host.project_id}"
  auto_create_subnetworks = "false"
- depends_on = ["google_project_service.host", "google_compute_shared_vpc_service_project.service_projects", ]
+ depends_on 		 = ["google_project_service.host", "google_compute_shared_vpc_service_project.service_projects", ]
 }
 
 // Configure subnets
@@ -77,7 +77,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_project" "project" {
- count			 = "${var.project_count}"
+ count		 = "${var.project_count}"
  name            = "theplatform-svc-${count.index+1}"
  project_id      = "theplatform-svc-${element(random_id.pid.*.hex, count.index)}"
  billing_account = "${var.billing_account}"
@@ -117,7 +117,7 @@ resource "google_compute_shared_vpc_host_project" "host" {
 // project enabling it, because enabling shared VPC will fail if the host project
 //# is not yet hosting.
 resource "google_compute_shared_vpc_service_project" "service_projects" {
-  count			  = "${var.project_count}"
+  count		  = "${var.project_count}"
   host_project    = "${google_project.host.project_id}"
   service_project = "${element(google_project.project.*.project_id, count.index)}"
 
@@ -128,17 +128,17 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 
 // Assign Kubernetes host Service Agent role to the terraform service account in the Host project
 resource "google_project_iam_member" "host_service_agent" {
-	count	= "${var.project_count}"
-	project = "${google_project_service.host.project}"
-	role    = "roles/container.hostServiceAgentUser"
-	member  = "serviceAccount:service-${element(google_project.project.*.number, count.index)}@container-engine-robot.iam.gserviceaccount.com"
+	count	   = "${var.project_count}"
+	project    = "${google_project_service.host.project}"
+	role       = "roles/container.hostServiceAgentUser"
+	member     = "serviceAccount:service-${element(google_project.project.*.number, count.index)}@container-engine-robot.iam.gserviceaccount.com"
 	depends_on = ["google_project_service.project"]
 }
 
 // IAM for service project's default service account <proj_num>@cloudservices.gserviceaccount.com, use subnets 
 // repeat for multiple service projects and replace the .0.number field
 resource "google_compute_subnetwork_iam_member" "service_network_cloud_services" {
-    count		  = "${var.subnet_count}"
+    count	      = "${var.subnet_count}"
 	project       = "${google_compute_shared_vpc_host_project.host.project}"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
@@ -148,7 +148,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_cloud_services"
 // IAM for service project's default service account service-<proj_num>@container-engine-robot.iam.gserviceaccount.com 
 // use subnets.  repeat for multiple service projects and replace the .0.number field
 resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
-	count		  = "${var.subnet_count}"
+	count	      = "${var.subnet_count}"
 	project       = "${google_compute_shared_vpc_host_project.host.project}"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
@@ -157,13 +157,13 @@ resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
 
 // Create Cluster
 resource "google_container_cluster" "shared_vpc_cluster" {
-	count			   = 1
+	count		   = 1
 	name               = "cluster-${count.index}"
 	zone               = "${var.zone1}"
 	initial_node_count = 3
 	project            = "${element(google_compute_shared_vpc_service_project.service_projects.*.service_project, count.index)}"
-	network    = "${google_compute_network.vpc.self_link}"
-	subnetwork = "${element(google_compute_subnetwork.subnet.*.self_link, count.index)}"
+	network    	   = "${google_compute_network.vpc.self_link}"
+	subnetwork	   = "${element(google_compute_subnetwork.subnet.*.self_link, count.index)}"
 	ip_allocation_policy {
         cluster_secondary_range_name  = "pod-${replace(replace(cidrsubnet(var.pod_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
         services_secondary_range_name = "svc1-${replace(replace(cidrsubnet(var.svc1_ip_cidr, 9, count.index), ".", "-"), "/", "-")}"
