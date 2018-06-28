@@ -122,6 +122,27 @@ resource "google_project_iam_member" "host_service_agent" {
 	depends_on = ["google_project_service.service_project"]
 }
 
+// IAM for service project's default service account <proj_num>@cloudservices.gserviceaccount.com, use subnets 
+// repeat for multiple service projects and replace the .0.number field
+resource "google_compute_subnetwork_iam_member" "service_network_cloud_services" {
+    count		  = "${var.subnet_count}"
+	project       = "${google_compute_shared_vpc_host_project.host.project}"
+	subnetwork    = "subnet-${count.index}"
+	role          = "roles/compute.networkUser"
+	member        = "serviceAccount:${google_project.project.0.number}@cloudservices.gserviceaccount.com"
+}
+
+// IAM for service project's default service account service-<proj_num>@container-engine-robot.iam.gserviceaccount.com 
+// use subnets.  repeat for multiple service projects and replace the .0.number field
+resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
+	count 	      = "${var.subnet_count}"
+	project       = "${google_compute_shared_vpc_host_project.host.project}"
+	subnetwork    = "subnet-${count.index}"
+	role          = "roles/compute.networkUser"
+	member        = "serviceAccount:service-${google_project.project.0.number}@container-engine-robot.iam.gserviceaccount.com"
+}
+
+
 // Bunch of outputs
 output "host_project_id" {
 	value = "${google_project.host.project_id}"
@@ -129,4 +150,8 @@ output "host_project_id" {
 
 output "project_id" {
  value = ["${google_project.project.*.project_id}"]
+}
+
+output "svc_project_numbers" {
+	value = ["${google_project.project.*.number}"]
 }
