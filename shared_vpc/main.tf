@@ -101,6 +101,18 @@ resource "google_compute_shared_vpc_host_project" "host" {
   depends_on = ["google_project_service.host"]
 }
 
+// Enable shared VPC on service projects - explicitly depend on the host
+// project enabling it, because enabling shared VPC will fail if the host project
+//# is not yet hosting.
+resource "google_compute_shared_vpc_service_project" "service_projects" {
+  count			  = "${var.project_count}"
+  host_project    = "${google_project.host.project_id}"
+  service_project = "${element(google_project.project.*.project_id, count.index)}"
+
+  depends_on = ["google_compute_shared_vpc_host_project.host",
+    "google_project_service.project",
+  ]
+}
 
 // Bunch of outputs
 output "host_project_id" {
