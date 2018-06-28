@@ -34,7 +34,7 @@ resource "google_compute_network" "vpc" {
  name                    = "${var.vpc}"
  project				 = "${google_project.host.project_id}"
  auto_create_subnetworks = "false"
- depends_on = ["google_project_service.host"]
+ depends_on = ["google_project_service.host", "google_compute_shared_vpc_service_project.service_projects", ]
 }
 
 // Configure subnets
