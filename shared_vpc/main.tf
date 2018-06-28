@@ -156,3 +156,7 @@ output "project_id" {
 output "svc_project_numbers" {
 	value = ["${google_project.project.*.number}"]
 }
+	
+output "shared_vpc_svc_projects" {
+	value = ["${google_compute_shared_vpc_service_project.service_projects.*.service_project}"]
+}
