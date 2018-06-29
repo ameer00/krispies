@@ -139,6 +139,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_cloud_services"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
 	member        = "serviceAccount:${google_project.project.0.number}@cloudservices.gserviceaccount.com"
+        depends_on    = ["google_compute_shared_vpc_service_project.service_projects"]
 }
 
 // IAM for service project's default service account service-<proj_num>@container-engine-robot.iam.gserviceaccount.com 
@@ -149,6 +150,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
 	member        = "serviceAccount:service-${google_project.project.0.number}@container-engine-robot.iam.gserviceaccount.com"
+	depends_on    = ["google_compute_shared_vpc_service_project.service_projects"]
 }
 
 /*
