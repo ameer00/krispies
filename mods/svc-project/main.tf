@@ -37,3 +37,11 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 //    "google_project_service.project",
 //  ]
 }
+
+output "host_project" {
+	value = "${google_compute_shared_vpc_service_project.service_projects.host_project}"
+}
+
+output "svc_project_number" {
+	value = ["${google_project.project.*.number}"]
+}
