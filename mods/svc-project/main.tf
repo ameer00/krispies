@@ -12,3 +12,14 @@ resource "google_project" "project" {
  auto_create_network = "${var.create_subs}"
 }
 
+resource "google_project_service" "project" {
+ count   = "${var.count}"
+ project = "${element(google_project.project.*.project_id, count.index)}"
+ service = "compute.googleapis.com"
+}
+
+resource "google_project_service" "project-container" {
+ count   = "${var.count}"
+ project = "${element(google_project.project.*.project_id, count.index)}"
+ service = "container.googleapis.com"
+}
