@@ -22,3 +22,7 @@ resource "google_project_service" "host-container" {
  project = "${var.project}"
  service = "container.googleapis.com"
 }
+
+output "project" {
+	value = "${google_compute_network.vpc.project}"
+
