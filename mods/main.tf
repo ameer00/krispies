@@ -20,4 +20,5 @@ module "subnets" {
 
 module "svc_projects" {
   source  = "./svc-project"
+  host_project  = "${module.vpc.project}"
   }
