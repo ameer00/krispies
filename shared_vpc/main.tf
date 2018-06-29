@@ -126,6 +126,13 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
   ]
 }
 
+// Assign Terraform service acct Compute Admin role on the host project
+resource "google_project_iam_member" "host_tf_compute_admin" {
+	project    = "${google_project_service.host.project}"
+	role       = "roles/compute.admin"
+	member     = "serviceAccount:terraform@${var.project}.iam.gserviceaccount.com"
+	depends_on = ["google_project_service.host"]
+	
 // Assign Kubernetes host Service Agent role to the terraform service account in the Host project
 resource "google_project_iam_member" "host_service_agent" {
 	count	   = "${var.project_count}"
