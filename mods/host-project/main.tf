@@ -10,3 +10,6 @@ resource "google_project" "host" {
  org_id          = "${var.org_id}"
  auto_create_network = "false"
 }
+
+output "project_id" {
+	value = "${google_project.host.project_id}"
