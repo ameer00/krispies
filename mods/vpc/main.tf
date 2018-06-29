@@ -25,4 +25,4 @@ resource "google_project_service" "host-container" {
 
 output "project" {
 	value = "${google_compute_network.vpc.project}"
-
+}
