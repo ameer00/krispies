@@ -13,4 +13,4 @@ resource "google_project" "host" {
 
 output "project_id" {
 	value = "${google_project.host.project_id}"
-	}
+}
