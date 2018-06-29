@@ -1,9 +1,9 @@
 // Project creation and billing assignment
 variable "project_count" { default = "2" }
 variable "subnet_count" { default = "10" }
-variable "project" { default = "theplatform-terraform-admin" }
+variable "project" { default = "krispies-tf-admin" }
 variable "credentials" { default = "~/.config/gcloud/terraform-admin.json" }
-// variable "project_name" { default = "theplatform-tf" }
+// variable "project_name" { default = "krispies-tf" }
 variable "billing_account" { default = "00CF06-C4A4BE-92FDD8" }
 variable "org_id" { default = "689680127547" }
 variable "zone1" { default = "us-central1-a" }
@@ -125,13 +125,6 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
     "google_project_service.project",
   ]
 }
-
-// Assign Terraform service acct Compute Admin role on the host project
-resource "google_project_iam_member" "host_tf_compute_admin" {
-	project    = "${google_project_service.host.project}"
-	role       = "roles/compute.admin"
-	member     = "serviceAccount:terraform@${var.project}.iam.gserviceaccount.com"
-	depends_on = ["google_project_service.host"]
 	
 // Assign Kubernetes host Service Agent role to the terraform service account in the Host project
 resource "google_project_iam_member" "host_service_agent" {
