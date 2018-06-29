@@ -23,6 +23,12 @@ resource "google_project_service" "host-container" {
  service = "container.googleapis.com"
 }
 
+// Enable shared VPC hosting in the host project.
+resource "google_compute_shared_vpc_host_project" "host" {
+  project    = "${var.project}"
+  depends_on = ["google_project_service.host-compute"]
+}
+
 output "project" {
-	value = "${google_compute_network.vpc.project}"
+	value = "${google_compute_shared_vpc_host_project.host.project}"
 }
