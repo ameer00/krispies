@@ -1,7 +1,7 @@
 terraform {
  backend "gcs" {
-   bucket  = "theplatform-terraform-admin"
+   bucket  = "krispies-tf-admin"
    prefix    = "/terraform.tfstate"
-   project = "theplatform-terraform-admin"
+   project = "krispies-tf-admin"
  }
 }
