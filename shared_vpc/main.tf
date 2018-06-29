@@ -20,8 +20,8 @@ provider "google" {
 
 // Create Host project
 resource "google_project" "host" {
- name            = "${var.krispies_host_project}"
- project_id      = "${var.krispies_host_project}"
+ name            = "${var.host_project}"
+ project_id      = "${var.host_project}"
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
 }
