@@ -8,4 +8,5 @@ resource "google_project" "host" {
  project_id      = "${var.host_project}"
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
+ auto_create_network = "false"
 }
