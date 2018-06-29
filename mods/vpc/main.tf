@@ -1,5 +1,5 @@
 variable "name" { default = "snap" }
-variable "create-subs" { default = "false" }
+variable "create_subs" { default = "false" }
 variable "project" {}
 
 
