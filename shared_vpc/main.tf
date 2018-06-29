@@ -2,10 +2,11 @@
 variable "project_count" { default = "2" }
 variable "subnet_count" { default = "10" }
 variable "project" { default = "krispies-tf-admin" }
+variable "host_project" { default = "krispies-host-project" }
 variable "credentials" { default = "~/.config/gcloud/terraform-admin.json" }
 // variable "project_name" { default = "krispies-tf" }
 variable "billing_account" { default = "00CF06-C4A4BE-92FDD8" }
-variable "org_id" { default = "689680127547" }
+variable "org_id" { default = "990456989270" }
 variable "zone1" { default = "us-central1-a" }
 variable "region" { default = "us-central1" }
 variable "vpc" { default = "snap" }
@@ -17,15 +18,10 @@ provider "google" {
  region      = "${var.region}"
 }
 
-resource "random_id" "pid" {
-  count       = "${var.project_count}"
-  byte_length = "4"
-}
-
 // Create Host project
 resource "google_project" "host" {
- name            = "theplatform-host-project"
- project_id      = "theplatform-host-${element(random_id.pid.*.hex, count.index)}"
+ name            = "${var.krispies_host_project}"
+ project_id      = "${var.krispies_host_project}"
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
 }
@@ -78,8 +74,8 @@ resource "google_compute_subnetwork" "subnet" {
 
 resource "google_project" "project" {
  count		 = "${var.project_count}"
- name            = "theplatform-svc-${count.index+1}"
- project_id      = "theplatform-svc-${element(random_id.pid.*.hex, count.index)}"
+ name            = "krispies-svc-${count.index+1}"
+ project_id      = "krispies-svc-${count.index+1}"
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
 }
@@ -155,6 +151,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
 	member        = "serviceAccount:service-${google_project.project.0.number}@container-engine-robot.iam.gserviceaccount.com"
 }
 
+/*
 // Create Cluster
 resource "google_container_cluster" "shared_vpc_cluster" {
 	count		   = 1
@@ -177,7 +174,7 @@ resource "google_container_cluster" "shared_vpc_cluster" {
 		"google_project_service.host-container",
 	]
 }
-
+*/
 
 // Bunch of outputs
 output "host_project_id" {
