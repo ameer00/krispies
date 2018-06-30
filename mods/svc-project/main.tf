@@ -6,8 +6,8 @@ variable "host_project" {}
 
 resource "google_project" "project" {
  count		       = "${var.count}"
- name            = "krispies1100-svc-${count.index+1}"
- project_id      = "krispies1100-svc-${count.index+1}"
+ name            = "krispies06291-svc-${count.index+1}"
+ project_id      = "krispies06291-svc-${count.index+1}"
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
  auto_create_network = "${var.create_subs}"
@@ -39,9 +39,17 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 }
 
 output "host_project" {
-	value = "${google_compute_shared_vpc_service_project.service_projects.host_project}"
+	value = "${google_compute_shared_vpc_service_project.service_projects.0.host_project}"
 }
 
 output "svc_project_number" {
 	value = ["${google_project.project.*.number}"]
+}
+
+output "svc_project" {
+	value = ["${google_project.project.*.project_id}"]
+}
+
+output "count" {
+        value = "${google_project.project.count}"
 }

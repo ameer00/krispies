@@ -40,3 +40,15 @@ resource "google_compute_subnetwork" "subnet" {
   }
 // depends_on = ["google_compute_network.vpc"]
 }
+
+output "project" {
+  value ="${google_compute_subnetwork.subnet.0.project}"
+}
+
+output "count" {
+  value ="${google_compute_subnetwork.subnet.count}"
+}
+
+output "subnets_name" {
+  value = ["${google_compute_subnetwork.subnet.*.self_link}"]
+}

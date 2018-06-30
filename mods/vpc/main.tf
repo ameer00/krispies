@@ -32,3 +32,7 @@ resource "google_compute_shared_vpc_host_project" "host" {
 output "project" {
 	value = "${google_compute_shared_vpc_host_project.host.project}"
 }
+
+output "vpc_link" {
+  value = "${google_compute_network.vpc.self_link}"
+}

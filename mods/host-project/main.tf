@@ -1,4 +1,4 @@
-variable "host_project" { default = "krispies1100-host-project" }
+variable "host_project" { default = "krispies06291-host-project" }
 variable "billing_account" { default = "00CF06-C4A4BE-92FDD8" }
 variable "org_id" { default = "990456989270" }
 
