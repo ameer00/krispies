@@ -1,3 +1,7 @@
+// Assume host and service projects are already created
+// Using the prefix 06291 for projects i.e. host project is krispies06291-host-project and
+// Service projects are krispies06291-svc-1 through svc-10
+
 // Project creation and billing assignment
 variable "project_count" { default = "2" }
 variable "subnet_count" { default = "10" }
