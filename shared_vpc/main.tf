@@ -1,12 +1,13 @@
 // Assume host and service projects are already created
 // Using the prefix 06291 for projects i.e. host project is krispies06291-host-project and
 // Service projects are krispies06291-svc-1 through svc-10
+// project_count variable stores num of svc projects i.e. krispies06291-svc-[var.project_count]
 
 // Project creation and billing assignment
 variable "project_count" { default = "2" }
 variable "subnet_count" { default = "10" }
 variable "project" { default = "krispies-tf-admin" }
-variable "host_project" { default = "krispies-host-project" }
+variable "host_project" { default = "krispies06291-host-project" }
 variable "credentials" { default = "~/.config/gcloud/terraform-admin.json" }
 // variable "project_name" { default = "krispies-tf" }
 variable "billing_account" { default = "00CF06-C4A4BE-92FDD8" }
@@ -22,6 +23,7 @@ provider "google" {
  region      = "${var.region}"
 }
 
+/*
 // Create Host project
 resource "google_project" "host" {
  name            = "${var.host_project}"
@@ -29,11 +31,12 @@ resource "google_project" "host" {
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
 }
+*/
 
 // Configure VPC in host project
 resource "google_compute_network" "vpc" {
  name                    = "${var.vpc}"
- project		 = "${google_project.host.project_id}"
+ project		 = "${var.host_project}"
  auto_create_subnetworks = "false"
  depends_on 		 = ["google_project_service.host", "google_compute_shared_vpc_service_project.service_projects", ]
 }
@@ -76,6 +79,8 @@ resource "google_compute_subnetwork" "subnet" {
  depends_on = ["google_compute_network.vpc"]
 }
 
+/*
+// Service projects should already be created with prefix krispies06291-svc-[num]
 resource "google_project" "project" {
  count		 = "${var.project_count}"
  name            = "krispies-svc-${count.index+1}"
@@ -83,33 +88,35 @@ resource "google_project" "project" {
  billing_account = "${var.billing_account}"
  org_id          = "${var.org_id}"
 }
-
+*/
 
 resource "google_project_service" "host" {
- project = "${google_project.host.project_id}"
+ project = "${var.host_project}"
  service = "compute.googleapis.com"
 }
 
 resource "google_project_service" "host-container" {
- project = "${google_project.host.project_id}"
+ project = "${var.host_project}"
  service = "container.googleapis.com"
 }
 
 resource "google_project_service" "project" {
  count   = "${var.project_count}"
- project = "${element(google_project.project.*.project_id, count.index)}"
+ project = "krispies06291-svc-${count.index+1}"
+// project = "${element(google_project.project.*.project_id, count.index)}"
  service = "compute.googleapis.com"
 }
 
 resource "google_project_service" "project-container" {
  count   = "${var.project_count}"
- project = "${element(google_project.project.*.project_id, count.index)}"
+ project = "krispies06291-svc-${count.index+1}"
+// project = "${element(google_project.project.*.project_id, count.index)}"
  service = "container.googleapis.com"
 }
 
 // Enable shared VPC hosting in the host project.
 resource "google_compute_shared_vpc_host_project" "host" {
-  project    = "${google_project.host.project_id}"
+  project    = "${var.host_project}"
   depends_on = ["google_project_service.host"]
 }
 
@@ -118,14 +125,19 @@ resource "google_compute_shared_vpc_host_project" "host" {
 //# is not yet hosting.
 resource "google_compute_shared_vpc_service_project" "service_projects" {
   count		  = "${var.project_count}"
-  host_project    = "${google_project.host.project_id}"
-  service_project = "${element(google_project.project.*.project_id, count.index)}"
+  host_project    = "${var.host_project}"
+  service_project = "krispies06291-svc-${count.index+1}"
+  // service_project = "${element(google_project.project.*.project_id, count.index)}"
 
   depends_on = ["google_compute_shared_vpc_host_project.host",
     "google_project_service.project",
   ]
 }
-	
+
+
+// COMPLETE BELOW FIRST 
+
+
 // Assign Kubernetes host Service Agent role to the terraform service account in the Host project
 resource "google_project_iam_member" "host_service_agent" {
 	count	   = "${var.project_count}"
