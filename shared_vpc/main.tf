@@ -5,6 +5,7 @@
 
 // Project creation and billing assignment
 variable "project_count" { default = "2" }
+variable "service_project" { default = [ "885362682", "1028161978297", "808980461674", "1016788329490", "69246815672", "924830371865", "877760245336", "800171114423", "777888774563", "564266229360" ] }
 variable "subnet_count" { default = "10" }
 variable "project" { default = "krispies-tf-admin" }
 variable "host_project" { default = "krispies06291-host-project" }
