@@ -52,7 +52,7 @@ variable "svc4_ip_cidr" { default = "172.22.0.0/15" }
 resource "google_compute_subnetwork" "subnet" {
  count              = "${var.subnet_count}"
  name               = "subnet-${count.index}"
- project            = "${google_project.host.project_id}"
+ project            = "${var.host_project}"
  ip_cidr_range      = "${cidrsubnet(var.node_ip_cidr, 9, count.index)}"
  network            = "${var.vpc}"
  region             = "${var.region}"
@@ -80,7 +80,7 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 /*
-// Service projects should already be created with prefix krispies06291-svc-[num]
+// Service projects should already be created with prefix krispies06291-svc-[var.project_count]
 resource "google_project" "project" {
  count		 = "${var.project_count}"
  name            = "krispies-svc-${count.index+1}"
