@@ -136,15 +136,12 @@ resource "google_compute_shared_vpc_service_project" "service_projects" {
 }
 
 
-// COMPLETE BELOW FIRST 
-
-
 // Assign Kubernetes host Service Agent role to the terraform service account in the Host project
 resource "google_project_iam_member" "host_service_agent" {
 	count	   = "${var.project_count}"
 	project    = "${google_project_service.host.project}"
 	role       = "roles/container.hostServiceAgentUser"
-	member     = "serviceAccount:service-${element(google_project.project.*.number, count.index)}@container-engine-robot.iam.gserviceaccount.com"
+	member     = "serviceAccount:service-${var.service_project[count.index]}@container-engine-robot.iam.gserviceaccount.com"
 	depends_on = ["google_project_service.project"]
 }
 
@@ -155,7 +152,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_cloud_services"
 	project       = "${google_compute_shared_vpc_host_project.host.project}"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
-	member        = "serviceAccount:${google_project.project.0.number}@cloudservices.gserviceaccount.com"
+	member        = "serviceAccount:${var.service_project[count.index]}@cloudservices.gserviceaccount.com"
         depends_on    = ["google_compute_shared_vpc_service_project.service_projects"]
 }
 
@@ -166,7 +163,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
 	project       = "${google_compute_shared_vpc_host_project.host.project}"
 	subnetwork    = "subnet-${count.index}"
 	role          = "roles/compute.networkUser"
-	member        = "serviceAccount:service-${google_project.project.0.number}@container-engine-robot.iam.gserviceaccount.com"
+	member        = "serviceAccount:service-${var.service_project[count.index]}@container-engine-robot.iam.gserviceaccount.com"
 	depends_on    = ["google_compute_shared_vpc_service_project.service_projects"]
 }
 
@@ -177,7 +174,7 @@ resource "google_container_cluster" "shared_vpc_cluster" {
 	name               = "cluster-${count.index}"
 	zone               = "${var.zone1}"
 	initial_node_count = 3
-	project            = "${element(google_compute_shared_vpc_service_project.service_projects.*.service_project, count.index)}"
+	project            = "krispies06291-svc-${count.index+1}"
 	network    	   = "${google_compute_network.vpc.self_link}"
 	subnetwork	   = "${element(google_compute_subnetwork.subnet.*.self_link, count.index)}"
 	ip_allocation_policy {
