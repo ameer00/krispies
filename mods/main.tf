@@ -15,12 +15,12 @@ module "vpc" {
   
 module "subnets" {
   source  = "./subnets"
-  count	  = "40"
+  count	  = "45"
   project = "${module.vpc.project}"
   }
 
 module "svc_projects" {
-  count	  = "11"
+  count	  = "10"
   source  = "./svc-project"
   host_project  = "${module.subnets.project}"
   }
