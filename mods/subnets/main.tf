@@ -52,3 +52,7 @@ output "count" {
 output "subnets_name" {
   value = ["${google_compute_subnetwork.subnet.*.self_link}"]
 }
+
+output "subnets_short_name" {
+  value = ["${google_compute_subnetwork.subnet.*.name}"]
+}
