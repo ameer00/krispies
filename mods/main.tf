@@ -15,7 +15,7 @@ module "vpc" {
   
 module "subnets" {
   source  = "./subnets"
-  count	  = "45"
+  count	  = "82"
   project = "${module.vpc.project}"
   }
 
