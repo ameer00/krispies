@@ -138,6 +138,10 @@ output "subnet_count" {
 output "subnets" {
   value = ["${module.subnets.subnets_name}"]
 }
+  
+output "subnets_name" {
+  value = ["${module.subnets.subnets_short_name}"]
+}
 
 output "count" {
   value	= "${module.iam.count}"
