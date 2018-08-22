@@ -192,6 +192,8 @@ resource "google_container_cluster" "shared_vpc_cluster" {
 }
 */
 
+/*		
+	
 // Bunch of outputs
 output "host_project_id" {
 	value = "${google_project.host.project_id}"
@@ -208,3 +210,4 @@ output "svc_project_numbers" {
 output "shared_vpc_svc_projects" {
 	value = ["${google_compute_shared_vpc_service_project.service_projects.*.service_project}"]
 }
+*/
