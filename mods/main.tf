@@ -15,7 +15,7 @@ module "vpc" {
   
 module "subnets" {
   source  = "./subnets"
-  count	  = "82"
+  count	  = "201"
   project = "${module.vpc.project}"
   }
 
@@ -123,7 +123,7 @@ module "share_subnet_project_10" {
 
 module "gke_svc_project_1" {
   source = "./gke"
-  count = 2
+  count = 0
   svc_count = 0
   vpc     = "${module.vpc.vpc_link}"
   project = ["${module.svc_projects.svc_project}"]
@@ -139,7 +139,7 @@ output "subnet_count" {
 output "subnets" {
   value = ["${module.subnets.subnets_name}"]
 }
-  
+
 output "subnets_name" {
   value = ["${module.subnets.subnets_short_name}"]
 }

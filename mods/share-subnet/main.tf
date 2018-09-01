@@ -9,7 +9,7 @@ variable "region" { default = "us-central1" }
 resource "google_compute_subnetwork_iam_member" "service_network_cloud_services" {
         count         = "${var.subnet_count}"
         project       = "${var.project}"
-	region	      = "${var.region}"
+	    region	      = "${var.region}"
         subnetwork    = "subnet-${count.index}"
         role          = "roles/compute.networkUser"
         member        = "serviceAccount:${var.project_number}@cloudservices.gserviceaccount.com"
@@ -21,7 +21,7 @@ resource "google_compute_subnetwork_iam_member" "service_network_cloud_services"
 resource "google_compute_subnetwork_iam_member" "service_network_gke_user" {
         count         = "${var.subnet_count}"
         project       = "${var.project}"
-	region	      = "${var.region}"
+	    region	      = "${var.region}"
         subnetwork    = "subnet-${count.index}"
         role          = "roles/compute.networkUser"
         member        = "serviceAccount:service-${var.project_number}@container-engine-robot.iam.gserviceaccount.com"

@@ -1,4 +1,4 @@
-variable "credentials" { default = "~/.config/gcloud/terraform-admin.json" }
+variable "credentials" { default = "~/credentials.json" }
 variable "project" { default = "krispies-tf-admin" }
 variable "region" { default = "us-central1" }
 
