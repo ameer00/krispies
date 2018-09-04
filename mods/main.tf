@@ -3,19 +3,19 @@
 module "provider" {
   source  = "./provider"
   }
-  
+
 module "host_project" {
   source  = "./host-project"
   }
-  
+
 module "vpc" {
   source  = "./vpc"
   project = "${module.host_project.project_id}"
   }
-  
+
 module "subnets" {
   source  = "./subnets"
-  count	  = "201"
+  count	  = "250"
   project = "${module.vpc.project}"
   }
 
@@ -122,14 +122,104 @@ module "share_subnet_project_10" {
 
 
 module "gke_svc_project_1" {
-  source = "./gke"
-  count = 0
+  source = "./gke-1"
+  count = 25
   svc_count = 0
+  pad     = 0
   vpc     = "${module.vpc.vpc_link}"
   project = ["${module.svc_projects.svc_project}"]
   subnet  = ["${module.subnets.subnets_name}"]
 }
 
+module "gke_svc_project_2" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 1
+  pad     = 25
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_3" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 2
+  pad     = 50
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_4" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 3
+  pad     = 75
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_5" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 4
+  pad     = 100
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_6" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 5
+  pad     = 125
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_7" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 6
+  pad     = 150
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_8" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 7
+  pad     = 175
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_9" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 8
+  pad     = 200
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
+
+module "gke_svc_project_10" {
+  source = "./gke-1"
+  count = 25
+  svc_count = 9
+  pad     = 225
+  vpc     = "${module.vpc.vpc_link}"
+  project = ["${module.svc_projects.svc_project}"]
+  subnet  = ["${module.subnets.subnets_name}"]
+}
 
 
 output "subnet_count" {

@@ -19,7 +19,7 @@ resource "google_container_cluster" "gke-0" {
   project		  = "${element(var.project, var.svc_count)}"
   network                 = "${var.vpc}"
   subnetwork              = "${element(var.subnet, count.index)}"
-  initial_node_count      = 3
+  initial_node_count      = 31
 //  private_cluster         = "true"
 //  master_ipv4_cidr_block  = "${cidrsubnet(var.master1_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
@@ -28,7 +28,7 @@ resource "google_container_cluster" "gke-0" {
    }
 //  depends_on = ["google_compute_subnetwork.subnet"]
 }
- 
+
 // Create GKE Clusters 2 of 4
 resource "google_container_cluster" "gke-1" {
   count                   = "${var.count}"
@@ -37,7 +37,7 @@ resource "google_container_cluster" "gke-1" {
   project		  = "${element(var.project, var.svc_count)}"
   network                 = "${var.vpc}"
   subnetwork              = "${element(var.subnet, count.index)}"
-  initial_node_count      = 3
+  initial_node_count      = 31
 //  private_cluster         = "true"
 //  master_ipv4_cidr_block  = "${cidrsubnet(var.master2_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
@@ -46,7 +46,7 @@ resource "google_container_cluster" "gke-1" {
    }
 //  depends_on = ["google_compute_subnetwork.subnet"]
 }
- 
+
 // Create GKE Clusters 3 of 4
 resource "google_container_cluster" "gke-2" {
   count                   = "${var.count}"
@@ -55,7 +55,7 @@ resource "google_container_cluster" "gke-2" {
   project		  = "${element(var.project, var.svc_count)}"
   network                 = "${var.vpc}"
   subnetwork              = "${element(var.subnet, count.index)}"
-  initial_node_count      = 3
+  initial_node_count      = 31
 //  private_cluster         = "true"
 //  master_ipv4_cidr_block  = "${cidrsubnet(var.master3_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
@@ -64,7 +64,7 @@ resource "google_container_cluster" "gke-2" {
    }
 //  depends_on = ["google_compute_subnetwork.subnet"]
 }
- 
+
 // Create GKE Clusters 4 of 4
 resource "google_container_cluster" "gke-3" {
   count                   = "${var.count}"
@@ -73,7 +73,7 @@ resource "google_container_cluster" "gke-3" {
   project		  = "${element(var.project, var.svc_count)}"
   network                 = "${var.vpc}"
   subnetwork              = "${element(var.subnet, count.index)}"
-  initial_node_count      = 3
+  initial_node_count      = 31
 //  private_cluster         = "true"
 //  master_ipv4_cidr_block  = "${cidrsubnet(var.master4_ip_cidr, 9, count.index)}"
   ip_allocation_policy    = {
